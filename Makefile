@@ -50,11 +50,11 @@ export SUB_MAKE_CMD = $(MAKE) --silent --no-print-directory \
 # IMG_LZMA =
 
 # Define _absolute_ path to your toolchain directory, for example:
-# export TOOLCHAIN_DIR:=/home/user/toolchain-mips_24kc_gcc-5.4.0_musl-1.1.15
-# export PATH:=$(TOOLCHAIN_DIR)/bin:$(PATH)
+export TOOLCHAIN_DIR:=/share/AP/trunk/staging_dir/toolchain-mips_34kc_gcc-4.8-linaro_uClibc-0.9.33.2/
+export PATH:=$(TOOLCHAIN_DIR)/bin:$(PATH)
 
 ifndef CROSS_COMPILE
-  CROSS_COMPILE = mips-openwrt-linux-musl-
+  CROSS_COMPILE = mips-openwrt-linux-uclibc-
 endif
 export CROSS_COMPILE
 
@@ -258,7 +258,8 @@ alfa-network_ap121f:
 comfast_cf-e314n \
 comfast_cf-e320n_v2 \
 comfast_cf-e520n \
-comfast_cf-e530n:
+comfast_cf-e530n \
+comfast_cf-wr610n:
 	@$(call build,64,1,ETH_CONFIG=_s27)
 
 d-link_dir-505:

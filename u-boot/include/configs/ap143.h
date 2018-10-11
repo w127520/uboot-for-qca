@@ -47,6 +47,14 @@
 	#define CONFIG_QCA_GPIO_MASK_OUT	CONFIG_QCA_GPIO_MASK_LED_ACT_L
 	#define CONFIG_QCA_GPIO_MASK_IN		GPIO17
 	#define CONFIG_QCA_GPIO_MASK_OUT_INIT_H	CONFIG_QCA_GPIO_MASK_LED_ACT_L
+	
+#elif defined(CONFIG_FOR_COMFAST_CF_WR610N)
+
+	#define CONFIG_QCA_GPIO_MASK_LED_ACT_H	GPIO0 | GPIO2 | GPIO3
+	#define CONFIG_QCA_GPIO_MASK_OUT	CONFIG_QCA_GPIO_MASK_LED_ACT_H
+	#define CONFIG_QCA_GPIO_MASK_IN		GPIO11 | GPIO12 | GPIO14 |\
+						GPIO16 | GPIO17
+	#define CONFIG_QCA_GPIO_MASK_OUT_INIT_L	CONFIG_QCA_GPIO_MASK_LED_ACT_H
 
 #elif defined(CONFIG_FOR_P2W_CPE505N)
 
@@ -202,7 +210,8 @@
  * ================
  */
 #if defined(CONFIG_FOR_COMFAST_CF_E314N) ||\
-    defined(CONFIG_FOR_COMFAST_CF_E320N_V2)
+    defined(CONFIG_FOR_COMFAST_CF_E320N_V2) ||\
+    defined(CONFIG_FOR_COMFAST_CF_WR610N)
 
 	#define CONFIG_BOOTARGS	"console=ttyS0,115200 root=31:03 "\
 				"rootfstype=jffs2 init=/sbin/init "\
@@ -274,6 +283,7 @@
     defined(CONFIG_FOR_COMFAST_CF_E320N_V2) ||\
     defined(CONFIG_FOR_COMFAST_CF_E520N)    ||\
     defined(CONFIG_FOR_COMFAST_CF_E530N)    ||\
+    defined(CONFIG_FOR_COMFAST_CF_WR610N)   ||\
     defined(CONFIG_FOR_TPLINK_MR22U_V1)     ||\
     defined(CONFIG_FOR_TPLINK_MR3420_V3)    ||\
     defined(CONFIG_FOR_TPLINK_MR6400_V1V2)  ||\
@@ -314,7 +324,8 @@
 #if defined(CONFIG_FOR_COMFAST_CF_E314N)    ||\
     defined(CONFIG_FOR_COMFAST_CF_E320N_V2) ||\
     defined(CONFIG_FOR_COMFAST_CF_E520N)    ||\
-    defined(CONFIG_FOR_COMFAST_CF_E530N)
+    defined(CONFIG_FOR_COMFAST_CF_E530N)     ||\
+    defined(CONFIG_FOR_COMFAST_CF_WR610N)
 	#define CFG_ENV_ADDR		0x9F018000
 	#define CFG_ENV_SIZE		0x7C00
 	#define CFG_ENV_SECT_SIZE	0x10000
@@ -364,10 +375,14 @@
 #if defined(CONFIG_FOR_COMFAST_CF_E314N)    ||\
     defined(CONFIG_FOR_COMFAST_CF_E320N_V2) ||\
     defined(CONFIG_FOR_COMFAST_CF_E520N)    ||\
-    defined(CONFIG_FOR_COMFAST_CF_E530N)
+    defined(CONFIG_FOR_COMFAST_CF_E530N)    ||\
+    defined(CONFIG_FOR_COMFAST_CF_WR610N)
 	#define OFFSET_MAC_DATA_BLOCK		0x10000
 	#define OFFSET_MAC_DATA_BLOCK_LENGTH	0x10000
-	#define OFFSET_MAC_ADDRESS		0x00000
+	#define OFFSET_MAC_ADDRESS		        0x00000
+    #define OFFSET_SN_CODE          0x00FC00
+    #define OFFSET_ROUTER_MODEL     0x00FD00
+    #define OFFSET_PIN_NUMBER       0x00FE00
 #elif defined(CONFIG_FOR_P2W_CPE505N)    ||\
       defined(CONFIG_FOR_P2W_R602N)      ||\
       defined(CONFIG_FOR_YUNCORE_AP90Q)  ||\
@@ -418,7 +433,8 @@
 #if defined(CONFIG_FOR_COMFAST_CF_E314N)    ||\
     defined(CONFIG_FOR_COMFAST_CF_E320N_V2) ||\
     defined(CONFIG_FOR_COMFAST_CF_E520N)    ||\
-    defined(CONFIG_FOR_COMFAST_CF_E530N)
+    defined(CONFIG_FOR_COMFAST_CF_E530N)    ||\
+    defined(CONFIG_FOR_COMFAST_CF_WR610N)
 	#undef CONFIG_CMD_DHCP
 	#undef CONFIG_CMD_LOADB
 	#undef CONFIG_CMD_SNTP
@@ -435,7 +451,8 @@
 #if defined(CONFIG_FOR_COMFAST_CF_E314N)    ||\
     defined(CONFIG_FOR_COMFAST_CF_E320N_V2) ||\
     defined(CONFIG_FOR_COMFAST_CF_E520N)    ||\
-    defined(CONFIG_FOR_COMFAST_CF_E530N)
+    defined(CONFIG_FOR_COMFAST_CF_E530N)    ||\
+    defined(CONFIG_FOR_COMFAST_CF_WR610N)
 	#define WEBFAILSAFE_UPLOAD_ART_ADDRESS	(CFG_FLASH_BASE + 0x10000)
 #endif
 
@@ -444,6 +461,7 @@
     defined(CONFIG_FOR_COMFAST_CF_E320N_V2) ||\
     defined(CONFIG_FOR_COMFAST_CF_E520N)    ||\
     defined(CONFIG_FOR_COMFAST_CF_E530N)    ||\
+    defined(CONFIG_FOR_COMFAST_CF_WR610N)   ||\
     defined(CONFIG_FOR_TPLINK_MR22U_V1)     ||\
     defined(CONFIG_FOR_TPLINK_MR3420_V3)    ||\
     defined(CONFIG_FOR_TPLINK_MR6400_V1V2)  ||\
@@ -487,6 +505,7 @@
     defined(CONFIG_FOR_COMFAST_CF_E320N_V2) ||\
     defined(CONFIG_FOR_COMFAST_CF_E520N)    ||\
     defined(CONFIG_FOR_COMFAST_CF_E530N)    ||\
+    defined(CONFIG_FOR_COMFAST_CF_WR610N)    ||\
     defined(CONFIG_FOR_TPLINK_MR22U_V1)     ||\
     defined(CONFIG_FOR_TPLINK_MR3420_V3)    ||\
     defined(CONFIG_FOR_TPLINK_MR6400_V1V2)  ||\
@@ -528,6 +547,7 @@
     !defined(CONFIG_FOR_COMFAST_CF_E320N_V2) &&\
     !defined(CONFIG_FOR_COMFAST_CF_E520N)    &&\
     !defined(CONFIG_FOR_COMFAST_CF_E530N)    &&\
+    !defined(CONFIG_FOR_COMFAST_CF_WR610N)    &&\
     !defined(CONFIG_FOR_P2W_CPE505N)         &&\
     !defined(CONFIG_FOR_P2W_R602N)           &&\
     !defined(CONFIG_FOR_WALLYS_DR531)        &&\

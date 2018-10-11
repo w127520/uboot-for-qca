@@ -66,7 +66,7 @@ int do_set_mac(cmd_tbl_t * cmdtp, int flag, int argc, char *argv[]){
 	int i = 0, j = 0;
 
 	// allow only 2 arg (command name + mac), second argument length should be 17 (xx:xx:xx:xx:xx:xx)
-	if(argc != 2 || strlen(argv[1]) != 17){
+	if(argc < 2 || strlen(argv[1]) != 17){
 		print_cmd_help(cmdtp);
 		return(1);
 	}
@@ -99,7 +99,16 @@ int do_set_mac(cmd_tbl_t * cmdtp, int flag, int argc, char *argv[]){
 	for(i = 0; i < 6; i++){
 		data_pointer[OFFSET_MAC_ADDRESS + i] = simple_strtoul((char *)(argv[1] + i*3), NULL, 16);
 	}
-
+    
+    //set sn
+    if(strcmp(argv[2], "") && strlen(argv[2]) == 18) {
+		strncpy((char *)(data_pointer + OFFSET_SN_CODE), argv[2], 18);
+	}
+    //set pin code
+    if(strcmp(argv[3], "") && strlen(argv[3]) == 8) {
+		strncpy((char *)(data_pointer + OFFSET_PIN_NUMBER), argv[3], 8);
+	}
+    
 	// now we can erase flash and write data from RAM
 	sprintf(buf,
 			"erase 0x%lX +0x%lX; cp.b 0x%lX 0x%lX 0x%lX",
@@ -114,9 +123,34 @@ int do_set_mac(cmd_tbl_t * cmdtp, int flag, int argc, char *argv[]){
 	return(run_command(buf, 0));
 }
 
-U_BOOT_CMD(setmac, 2, 0, do_set_mac, "save new MAC address in FLASH\n", "xx:xx:xx:xx:xx:xx\n\t- change MAC address stored in FLASH (xx - value in hex format)\n");
+U_BOOT_CMD(setmac, 4, 0, do_set_mac, "save new MAC SN pin address in FLASH\n", "xx:xx:xx:xx:xx:xx sn pin\n\t- change MAC address stored in FLASH (xx - value in hex format)\n");
 
 #endif /* if defined(CONFIG_CMD_MAC) && defined(OFFSET_MAC_ADDRESS) */
+
+#if defined(OFFSET_SN_CODE)
+/*
+ * Show COMFAST router SN
+ */
+int do_print_sn(cmd_tbl_t * cmdtp, int flag, int argc, char *argv[]){
+	unsigned char buffer[18];
+
+	// get router SN from flash and print it
+	memcpy(buffer, (void *)(CFG_FLASH_BASE + OFFSET_MAC_DATA_BLOCK + (OFFSET_SN_CODE)), 18);
+
+	printf("Router SN stored in FLASH at offset 0x%X: ", CFG_FLASH_BASE + OFFSET_MAC_DATA_BLOCK + OFFSET_SN_CODE);
+	printf("%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X\n\n", buffer[0] & 0xFF, buffer[1] & 0xFF, buffer[2] & 0xFF, buffer[3] & 0xFF, buffer[4] & 0xFF, buffer[5] & 0xFF, buffer[6] & 0xFF, buffer[7] & 0xFF,buffer[0] & 0xFF, buffer[1] & 0xFF, buffer[2] & 0xFF, buffer[3] & 0xFF, buffer[4] & 0xFF, 
+        buffer[5] & 0xFF, buffer[6] & 0xFF, buffer[7] & 0xFF,
+        buffer[8] & 0xFF, buffer[9] & 0xFF, buffer[10] & 0xFF,
+        buffer[11] & 0xFF, buffer[12] & 0xFF, buffer[13] & 0xFF,
+        buffer[14] & 0xFF, buffer[15] & 0xFF, buffer[16] & 0xFF, buffer[17] & 0xFF);
+
+	return(0);
+}
+
+U_BOOT_CMD(printsn, 1, 1, do_print_sn, "print router sn stored in FLASH\n", NULL);
+
+#endif /* if defined(OFFSET_ROUTER_MODEL) */
+
 
 #if defined(OFFSET_ROUTER_MODEL)
 /*
